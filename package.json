@@ -1,0 +1,16 @@
+{
+  "name": "clean-slate",
+  "version": "0.1.0",
+  "description": "Run your dev server with a throwaway browser profile, so every run starts with empty storage.",
+  "type": "module",
+  "bin": {
+    "clean-slate": "./src/cli.ts"
+  },
+  "files": ["src"],
+  "scripts": {
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
