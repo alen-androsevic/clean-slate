@@ -93,6 +93,9 @@ function stop(proc: Subprocess | undefined, signal: NodeJS.Signals) {
 }
 
 async function main() {
+  if (typeof Bun.Terminal !== "function") {
+    throw new Error(`Bun ${Bun.version} has no pseudo-terminal support, which clean-slate needs. Run \`bun upgrade\`.`);
+  }
   const { values, command: rawCommand } = parse();
   if (values.help || rawCommand.length === 0) {
     console.log(USAGE);

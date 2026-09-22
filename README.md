@@ -28,12 +28,41 @@ Only your own app is touched:
 
 ## Install
 
+Requirements:
+
+- macOS or Linux
+- [Bun](https://bun.sh) 1.3 or newer. If clean-slate reports that pseudo-terminal support is missing, run `bun upgrade`.
+- Chrome, Chromium, Brave, Edge or Firefox
+- For native wiping (optional): Xcode for iOS simulators; `adb` for Android, found on `PATH`, in `$ANDROID_HOME`/`$ANDROID_SDK_ROOT`, or in the default SDK location
+
+**Per project (recommended).** Everyone on the team gets it with `bun install`:
+
 ```sh
-bun add -d clean-slate      # per project
-# or, while developing clean-slate itself:
-bun link                    # in this repo
-bun link clean-slate        # in your project
+bun add -d github:alen-androsevic/clean-slate
 ```
+
+Then use it in your `package.json` scripts (see [Use](#use)).
+
+**Globally**, to use `clean-slate` in any project without adding a dependency:
+
+```sh
+bun add -g github:alen-androsevic/clean-slate
+```
+
+This puts `clean-slate` in `~/.bun/bin`, which the Bun installer adds to your `PATH`. Run the same command again to update, and `bun remove -g clean-slate` to uninstall.
+
+To pin a version, add a tag or commit: `github:alen-androsevic/clean-slate#v0.1.0`.
+
+**From a clone**, to work on clean-slate itself:
+
+```sh
+git clone https://github.com/alen-androsevic/clean-slate.git
+cd clean-slate
+bun install
+bun link        # `clean-slate` now runs your checkout; `bun unlink` undoes it
+```
+
+Check the install with `clean-slate --help`.
 
 ## Use
 
@@ -48,7 +77,7 @@ Wrap your dev script in `package.json`:
 }
 ```
 
-`bun run start` then starts clean every time. To try it without editing `package.json`, name an existing script: `clean-slate start` runs `bun run start` inside a session.
+`bun run start` then starts clean every time. To try it without editing `package.json`, name an existing script: `bunx clean-slate start` runs `bun run start` inside a session.
 
 | Option | |
 | --- | --- |
@@ -77,3 +106,7 @@ Ctrl+C goes to the dev server as usual. If the server doesn't stop, a second Ctr
 ```sh
 bun test   # unit tests + an end-to-end test that runs a real headless browser twice
 ```
+
+## License
+
+[0BSD](LICENSE): use, change and share it however you like.
