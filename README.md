@@ -38,7 +38,7 @@ Requirements:
 **Per project (recommended).** Everyone on the team gets it with `bun install`:
 
 ```sh
-bun add -d github:alen-androsevic/clean-slate
+bun add -d @alen-androsevic/clean-slate
 ```
 
 Then use it in your `package.json` scripts (see [Use](#use)).
@@ -46,12 +46,14 @@ Then use it in your `package.json` scripts (see [Use](#use)).
 **Globally**, to use `clean-slate` in any project without adding a dependency:
 
 ```sh
-bun add -g github:alen-androsevic/clean-slate
+bun add -g @alen-androsevic/clean-slate
 ```
 
-This puts `clean-slate` in `~/.bun/bin`, which the Bun installer adds to your `PATH`. Run the same command again to update, and `bun remove -g clean-slate` to uninstall.
+This puts `clean-slate` in `~/.bun/bin`, which the Bun installer adds to your `PATH`. `bun update -g @alen-androsevic/clean-slate` updates it, and `bun remove -g @alen-androsevic/clean-slate` uninstalls it.
 
-To pin a version, add a tag or commit: `github:alen-androsevic/clean-slate#v0.1.0`.
+npm and pnpm work too (`npm i -D @alen-androsevic/clean-slate`), but clean-slate always runs on Bun, so Bun must be installed either way.
+
+To install straight from GitHub instead of npm, use `github:alen-androsevic/clean-slate`, optionally with a tag such as `#v0.1.0`.
 
 **From a clone**, to work on clean-slate itself:
 

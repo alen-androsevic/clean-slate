@@ -6,6 +6,7 @@ import { BROWSER_NAMES, findBrowser, launchArgs, type Browser } from "./browsers
 import { expoApps, wipeNativeApps, type NativeApps, type WipeOptions } from "./native";
 import { createSession, removeSession } from "./session";
 import { findDevUrl, waitForListening } from "./url";
+import pkg from "../package.json";
 
 const USAGE = `clean-slate: run a dev server with a throwaway browser profile and wiped native app data
 
@@ -22,34 +23,35 @@ Options:
   --timeout <sec>     how long to wait for the dev server (default 60)
   --headless          run the browser headless
   --keep              keep the browser session and native app data on exit (for debugging)
+  -v, --version       print the version
   -h, --help          show this help
 
 Set CLEAN_SLATE=0 to run the command without any of this (e.g. in CI).`;
 
 const log = (msg: string) => process.stderr.write(`\x1b[2m[clean-slate]\x1b[22m ${msg}\r\n`);
 
+const OPTIONS = {
+  url: { type: "string" },
+  browser: { type: "string" },
+  "app-id": { type: "string", multiple: true },
+  "no-native": { type: "boolean" },
+  "reset-keychain": { type: "boolean" },
+  timeout: { type: "string" },
+  headless: { type: "boolean" },
+  keep: { type: "boolean" },
+  version: { type: "boolean", short: "v" },
+  help: { type: "boolean", short: "h" },
+} as const;
+
 function parse() {
-  // Our options come first; everything from the first positional on belongs to the wrapped command.
+  // Our options come first; everything from the first positional on belongs to the wrapped command,
+  // including options like `--help` that the command should receive.
   const argv = Bun.argv.slice(2);
-  const { values, tokens } = parseArgs({
-    args: argv,
-    options: {
-      url: { type: "string" },
-      browser: { type: "string" },
-      "app-id": { type: "string", multiple: true },
-      "no-native": { type: "boolean" },
-      "reset-keychain": { type: "boolean" },
-      timeout: { type: "string" },
-      headless: { type: "boolean" },
-      keep: { type: "boolean" },
-      help: { type: "boolean", short: "h" },
-    },
-    allowPositionals: true,
-    strict: false,
-    tokens: true,
-  });
+  const { tokens } = parseArgs({ args: argv, options: OPTIONS, allowPositionals: true, strict: false, tokens: true });
   const first = tokens.find((t) => t.kind === "positional" || t.kind === "option-terminator");
+  const ours = first ? argv.slice(0, first.index) : argv;
   const command = first ? argv.slice(first.kind === "option-terminator" ? first.index + 1 : first.index) : [];
+  const { values } = parseArgs({ args: ours, options: OPTIONS, strict: false });
   return { values, command };
 }
 
@@ -97,6 +99,10 @@ async function main() {
     throw new Error(`Bun ${Bun.version} has no pseudo-terminal support, which clean-slate needs. Run \`bun upgrade\`.`);
   }
   const { values, command: rawCommand } = parse();
+  if (values.version) {
+    console.log(pkg.version);
+    process.exit(0);
+  }
   if (values.help || rawCommand.length === 0) {
     console.log(USAGE);
     process.exit(values.help ? 0 : 1);

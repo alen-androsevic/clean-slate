@@ -1,5 +1,5 @@
 {
-  "name": "clean-slate",
+  "name": "@alen-androsevic/clean-slate",
   "version": "0.1.0",
   "description": "Run your dev server with a throwaway browser profile and wiped simulator/device app data, so every run starts from empty state.",
   "keywords": [
@@ -20,7 +20,7 @@
   "license": "0BSD",
   "type": "module",
   "bin": {
-    "clean-slate": "./src/cli.ts"
+    "clean-slate": "src/cli.ts"
   },
   "files": [
     "src"
@@ -30,9 +30,13 @@
     "linux"
   ],
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "prepublishOnly": "bunx tsc -p . && bun test"
   },
   "devDependencies": {
     "@types/bun": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
